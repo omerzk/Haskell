@@ -29,24 +29,43 @@ slice k xs
     | otherwise = ((take k xs), lastNitems ((length xs) - k) xs)
 --------------------------------------------------------------------------
 runLength :: (Eq a) => [a] -> [(a, Int)]
-run :: (Eq a) => [a] -> [a]
+--run :: (Eq a) => [a] -> [a]
 
-run sq 
-    | tail sq == [] = [] 
-    | head sq == (head (tail sq)) = run (tail sq) 
-    | otherwise = tail sq
 
-runLength sq 
-    | sq == [] = [] 
-    |otherwise = (head sq, (length sq) - (length r)) : runLength r 
-    where r = run sq 
+runLength [] = []
+runLength sq = (head sq, (length sq) - (length r)) : runLength r 
+    where r = run sq
+          run (x:xs)
+            | xs == [] = []
+            | x == (head xs) = run xs 
+            | otherwise = xs 
 ----------------------------------------------------------------------------
-subSets :: (Eq a , Integral b) => b -> [a] -> [[a]]
+--subSets :: (Eq a , Integral b) => b -> [a] -> [[a]]
 
-subSets k set = 
-    | k > len || k == 0 = []
-    | k == len = set 
-    | head set : subSets (k - 1) (tail set):[] ++ subSets k (tail set)
-    where len = length set
+--subSets k set 
+--    | k > len || k <= 0 = [[]]
+--    | k == len = [set] 
+--    | otherwise = ((head set) : subSets (k - 1) (tail set)) (subSets k (tail set))
+--    where len = length set
+--choose ::  Int -> [b] -> [[b]]
+--choose k set 
+--    | k == 0 || k > len  = [[]]
+--    |otherwise =  ((head set):) `fmap` (choose (k-1) (tail set)) ++ choose k (tail set)
+--    where len = length set
+-----------------------------------------------------------------------------
+--greyCode :: Int -> Int
+--greyCode n =
+--    (n/2) `xor` n
+------------------------------------------------------------------------------
+--maxSubSq :: (Ord a) => [a]->[a]
+cumSum :: (Integral b, Integral a) => [a] -> b -> [b]
+cumSum (x:[]) sumSoFar = (sumSoFar + x):[]  
+cumSum sq sumSoFar = cur : cumSum (tail sq) cur 
+    where cur = sumSoFar + (head sq)    
+--maxSubSq xs = maxi 0 1 (length xs) xs
+--where maxi maxSoFar i j xs
+--        | xs == [] || j < i = []
+--        | j == i  = xs
+--        | otherwise =  
 
-main = do putStrLn (show (runLength ['a','a','a','b','b'])) 
+main = do putStrLn (show (cumSum [8,0,0,0,9,9,9,9,9,8,88,8])) 
