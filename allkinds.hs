@@ -57,15 +57,17 @@ runLength sq = (head sq, (length sq) - (length r)) : runLength r
 --greyCode n =
 --    (n/2) `xor` n
 ------------------------------------------------------------------------------
---maxSubSq :: (Ord a) => [a]->[a]
-cumSum :: (Integral b, Integral a) => [a] -> b -> [b]
-cumSum (x:[]) sumSoFar = (sumSoFar + x):[]  
-cumSum sq sumSoFar = cur : cumSum (tail sq) cur 
-    where cur = sumSoFar + (head sq)    
---maxSubSq xs = maxi 0 1 (length xs) xs
---where maxi maxSoFar i j xs
---        | xs == [] || j < i = []
---        | j == i  = xs
---        | otherwise =  
 
-main = do putStrLn (show (cumSum [8,0,0,0,9,9,9,9,9,8,88,8])) 
+cumSum :: (Integral b) => [b] -> b -> [b]
+cumSum [] _ = []
+cumSum sq sumSoFar 
+    | tail sq == [] = sumSoFar + (head sq):[] 
+    | otherwise = sumSoFar : (cumSum (tail sq) (sumSoFar + (head sq)))
+
+-- maxSubSq xs = maxi 0 1 (length xs) xs
+-- where maxi maxSoFar i j xs
+--         | xs == [] || j < i = []
+--         | j == i  = [xs]
+--         | otherwise =  
+
+main = do putStrLn (show (cumSum [8,0,0,0,9,9,9,9,9,8,88,8] 0)) 
